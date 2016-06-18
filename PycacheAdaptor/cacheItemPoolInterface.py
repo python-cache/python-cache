@@ -11,7 +11,7 @@ from abc import ABCMeta, abstractmethod
 class CacheItemPoolInterface(metaclass=ABCMeta):
 
     @abstractmethod
-    def get_key(self, key):
+    def get_item(self, key):
         """Returns a Cache Item representing the specified key.
 
         Note:
