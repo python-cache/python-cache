@@ -1,5 +1,6 @@
 import cPickle
 import redis
+from datetime import datetime
 
 from pycache.Adapter.CacheItemPoolInterface import CacheItemPoolInterface
 from pycache.cacheItem import CacheItem
@@ -43,6 +44,7 @@ class RedisItemPool(CacheItemPoolInterface):
             return item
         else:
             item = CacheItem()
+
             item.key = key
             return item
 
@@ -115,9 +117,14 @@ class RedisItemPool(CacheItemPoolInterface):
         :return True if the item was successfully persisted. False if there was an error.
 
         """
-        if item.expire_time != None:
-            return self.client.setex(self.normalize_key(item.key),
-                                     cPickle.dumps(item), item.expire_time.seconds)
+
+        if item.expire_at != datetime.max:
+            expire_seconds = (item.expire_at - datetime.utcnow()).seconds
+            if expire_seconds > 0:
+                return self.client.setex(self.normalize_key(item.key),
+                                     cPickle.dumps(item), expire_seconds)
+            else:
+                return False
         else:
             return self.client.set(self.normalize_key(item.key),
                                    cPickle.dumps(item))
@@ -131,7 +138,7 @@ class RedisItemPool(CacheItemPoolInterface):
         :return False if the item could not be queued or if a commit was attempted and failed. True otherwise.
 
         """
-        return True
+        return False
 
 
     def commit(self):
