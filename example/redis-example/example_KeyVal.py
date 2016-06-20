@@ -7,7 +7,7 @@ from pycache.Adapter import RedisItemPool
 from pycache import CacheItem
 
 # create redis client
-client = redis.Redis(host='192.168.99.100', port=32769)
+client = redis.Redis(host='192.168.99.100', port=32771)
 
 # init RedisItemPool with redis client
 pool = RedisItemPool(client)

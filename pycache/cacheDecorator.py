@@ -18,7 +18,7 @@ def cached(CacheItemPool='memory'):
     """
     def decorator(func):
         def inner(*args, **kwargs):
-            key = func.__name__+"&"+cPickle.dumps(args)+cPickle.dumps(kwargs)
+            key = (func.__name__, cPickle.dumps(args), cPickle.dumps(kwargs))
             item = CacheItemPool.get_item(key)
             if item.is_hit():
                 val = item.get()

@@ -150,4 +150,4 @@ class RedisItemPool(CacheItemPoolInterface):
         return True
 
     def normalize_key(self, key):
-        return self.key_prefix+key
+        return self.key_prefix+cPickle.dumps(key)

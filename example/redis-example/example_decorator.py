@@ -7,7 +7,7 @@ from pycache import cached
 
 
 # create redis client
-client = redis.Redis(host='192.168.99.100', port=32769)
+client = redis.Redis(host='192.168.99.100', port=32771)
 
 # init RedisItemPool with redis client
 pool = RedisItemPool(client)
@@ -22,5 +22,5 @@ def myAdder(a, b):
     return a+b
 
 
-print(myAdder(30, 90)) # wait for 3 seconds
-print(myAdder(30, 90)) # no need wait
+print(myAdder(5, 6)) # wait for 3 seconds
+print(myAdder(5, 6)) # no need wait
