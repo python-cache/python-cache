@@ -2,19 +2,14 @@
 
 from datetime import datetime
 from datetime import timedelta
+"""CacheItem.
 
-from cacheItemInterface import CacheItemInterface
+This module defines an interface for interacting with objects inside a cache.
 
-class CacheItem(CacheItemInterface):
+"""
+from abc import ABCMeta, abstractmethod
 
-    def __init__(self):
-        self.key = None
-        self.value = None
-
-        # UTC datetime
-        self.expire_at = datetime.min
-        self.isHit = False
-
+class CacheItemInterface():
 
     def get_key(self):
         """Returns the key for the current cache item.
@@ -26,7 +21,7 @@ class CacheItem(CacheItemInterface):
         :return The key string for this cache item.
 
         """
-        return self.key
+        pass
 
     def get(self):
         """Retrieves the value of the item from the cache associated with this object's key.
@@ -41,10 +36,7 @@ class CacheItem(CacheItemInterface):
         :return The value corresponding to this cache item's key, or null if not found.
 
         """
-        if self.is_hit():
-            return self.value
-        else:
-            return None
+        pass
 
     def is_hit(self):
         """Confirms if the cache item lookup resulted in a cache hit.
@@ -56,8 +48,7 @@ class CacheItem(CacheItemInterface):
         :return True if the request resulted in a cache hit. False otherwise.
 
         """
-        self._setHit()
-        return self.isHit
+        pass
 
     def set(self, key, value):
         """Sets the key and value represented by this cache item.
@@ -73,11 +64,7 @@ class CacheItem(CacheItemInterface):
         :return The invoked object.
 
         """
-        self.key = key
-        self.value = value
-        self.expire_at = datetime.max
-        self._setHit()
-        return self.key, self.value
+        pass
 
 
     def expires_at(self, timestamp):
@@ -94,9 +81,7 @@ class CacheItem(CacheItemInterface):
         :return The called object.
 
         """
-        self.expire_at = datetime.utcfromtimestamp(timestamp)
-        self._setHit()
-        return timestamp
+        pass
 
     def expires_after(self, seconds):
         """Sets the expiration time for this cache item.
@@ -113,12 +98,4 @@ class CacheItem(CacheItemInterface):
         :return The called object.
 
         """
-        self.expire_at = datetime.utcnow()+timedelta(seconds=seconds)
-        self._setHit()
-        return timedelta
-
-    def _setHit(self):
-        if datetime.utcnow() > self.expire_at:
-            self.isHit = False
-        else:
-            self.isHit = True
+        pass
