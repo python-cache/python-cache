@@ -98,7 +98,7 @@ class MongoItemPool(CacheItemPoolInterface):
         :return True if the pool was successfully cleared. False if there was an error.
 
         """
-        return self.client.remove({})
+        return self.collection.remove({})
 
 
     def delete_item(self, key):
@@ -111,7 +111,7 @@ class MongoItemPool(CacheItemPoolInterface):
         :return True if the item was successfully removed. False if there was an error.
 
         """
-        return self.client.remove({"key":self.normalize_key(key)})
+        return self.collection.remove({"key":self.normalize_key(key)})
 
 
     def save(self, item):
