@@ -30,5 +30,7 @@ print("sleep 2 seconds")
 time.sleep(2)
 print("isHit:",item.is_hit()) # "False"
 pool.save(item)
+
 ret_item = pool.get_item("mykey")
 print(ret_item.is_hit(), ret_item.get(), ret_item.get_key())
+# is_hit: True, mongodb's expiration need more time for expiration thread
