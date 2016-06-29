@@ -1,6 +1,10 @@
-from setuptools import setup
-
+import codecs
 import os
+import sys
+
+from distutils.util import convert_path
+from fnmatch import fnmatchcase
+from setuptools import setup, find_packages
 
 
 def readme():
@@ -8,8 +12,8 @@ def readme():
 
 setup(
     name='python-cache',
-    packages=['pycache'],
-    version='0.0.5',
+    packages = find_packages(exclude=["tests.*", "tests"]),
+    version='0.0.8',
     description='Pythonic way of Caching',
     long_description=readme(),
     author='python-cache',
@@ -24,3 +28,5 @@ setup(
     include_package_data=True,
     license='MIT License',
 )
+
+
