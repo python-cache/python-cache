@@ -10,7 +10,7 @@ from pycache import CacheItem
 client = pymongo.MongoClient(host="192.168.99.100", port=27017)
 
 # init MongoItemPool with Mongo client
-pool = MongoItemPool(client)
+pool = MongoItemPool(client, DB="ANA", COLLECTION="Collector")
 item = CacheItem()
 
 
