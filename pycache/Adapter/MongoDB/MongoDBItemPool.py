@@ -17,9 +17,9 @@ This module generates CacheItemInterface objects.
 
 class MongoItemPool(CacheItemPoolInterface):
 
-    def __init__(self, client = pymongo.MongoClient(host="localhost", port=27017)):
+    def __init__(self, client = pymongo.MongoClient(host="localhost", port=27017), DB="pycache", COLLECTION=PREFIX):
         self.client = client
-        self.collection = self.client["pycache"][PREFIX]
+        self.collection = self.client[DB][COLLECTION]
         self.collection.create_index("expireAt", expireAfterSeconds=0)
 
     def get_item(self, key):

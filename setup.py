@@ -9,7 +9,7 @@ def readme():
 setup(
     name='python-cache',
     packages=['pycache'],
-    version='0.0.1',
+    version='0.0.2',
     description='Pythonic way of Caching',
     long_description=readme(),
     author='python-cache',

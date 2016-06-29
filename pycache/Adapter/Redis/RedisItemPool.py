@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pycache.Adapter.CacheItemPoolInterface import CacheItemPoolInterface
 from pycache.cacheItem import CacheItem
-from pycache.settings import PREFIX
+from pycache.settings import PREFIX as prefix
 
 # -*- coding: utf-8 -*-
 """
@@ -17,7 +17,7 @@ This module generates CacheItemInterface objects.
 
 class RedisItemPool(CacheItemPoolInterface):
 
-    def __init__(self, client=redis.Redis(host='localhost',port=6379)):
+    def __init__(self, client=redis.Redis(host='localhost',port=6379), PREFIX=prefix):
         self.client = client
         self.key_prefix = PREFIX+":"
 
