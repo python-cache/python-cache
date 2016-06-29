@@ -8,11 +8,19 @@ This module generates CacheItemInterface objects.
 from abc import ABCMeta, abstractmethod
 
 
-class CacheItemPoolInterface():
+class CacheItemPoolInterface(dict):
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def get_item(self, key):
+    def __len__(self):
+        """Returns the number of CacheItem in the pool.
+
+        :return: return the number of CacheItem in the pool
+        """
+        pass
+
+    @abstractmethod
+    def __getitem__(self, key):
         """Returns a Cache Item representing the specified key.
 
         Note:
@@ -29,24 +37,7 @@ class CacheItemPoolInterface():
         pass
 
     @abstractmethod
-    def get_items(self, keys=None):
-        """Returns a traversable set of cache items.
-
-        :param keys: An indexed array of keys of items to retrieve.
-
-        :exception CacheException: If any of the keys in `keys` are not a legal value
-
-        :return
-            A traversable collection of Cache Items keyed by the cache keys of
-            each item. A Cache item will be returned for each key, even if that
-            key is not found. However, if no keys are specified then an empty
-            traversable MUST be returned instead.
-
-        """
-        pass
-
-    @abstractmethod
-    def has_item(self, key):
+    def __contains__(self, key):
         """Confirms if the cache contains specified cache item.
 
         Note:
@@ -73,7 +64,7 @@ class CacheItemPoolInterface():
         pass
 
     @abstractmethod
-    def delete_item(self, key):
+    def __delitem__(self, key):
         """Removes the item from the pool.
 
         :param key: The key for which to delete
@@ -86,7 +77,7 @@ class CacheItemPoolInterface():
         pass
 
     @abstractmethod
-    def save(self, item):
+    def __setitem__(self, key, value):
         """Persists a cache item immediately.
 
         :param item: The cache item to save.

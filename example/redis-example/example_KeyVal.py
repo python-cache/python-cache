@@ -17,8 +17,10 @@ item = CacheItem()
 # A common way to do key-val caching
 
 item.set("mykey","myval")
-pool.save(item)
-ret_item = pool.get_item("mykey")
+
+pool['mykey'] = item
+ret_item = pool["mykey"]
+
 print(ret_item.get(), ret_item.get_key()) # "mykey", "myval"
 
 print("--")
@@ -29,6 +31,6 @@ item.expires_after(1)
 print("sleep 2 seconds")
 time.sleep(2)
 print("isHit:",item.is_hit()) # "False"
-pool.save(item)
-ret_item = pool.get_item("mykey")
+pool["mykey"] = item
+ret_item = pool["mykey"]
 print(ret_item.is_hit(), ret_item.get(), ret_item.get_key())

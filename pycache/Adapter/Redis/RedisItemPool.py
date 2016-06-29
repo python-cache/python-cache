@@ -21,7 +21,14 @@ class RedisItemPool(CacheItemPoolInterface):
         self.client = client
         self.key_prefix = PREFIX+":"
 
-    def get_item(self, key):
+    def __len__(self):
+        """Returns the number of CacheItem in the pool.
+
+        :return: return the number of CacheItem in the pool
+        """
+        pass
+
+    def __getitem__(self, key):
         """Returns a Cache Item representing the specified key.
 
         Note:
@@ -36,7 +43,7 @@ class RedisItemPool(CacheItemPoolInterface):
 
         """
 
-        if self.has_item(key):
+        if self.__contains__(key):
             key = self.normalize_key(key)
             item_str = self.client.get(key)
             item = cPickle.loads(item_str)
@@ -48,28 +55,7 @@ class RedisItemPool(CacheItemPoolInterface):
             item.key = key
             return item
 
-
-    def get_items(self, keys=None):
-        """Returns a traversable set of cache items.
-
-        :param keys: An indexed array of keys of items to retrieve.
-
-        :exception CacheException: If any of the keys in `keys` are not a legal value
-
-        :return
-            A traversable collection of Cache Items keyed by the cache keys of
-            each item. A Cache item will be returned for each key, even if that
-            key is not found. However, if no keys are specified then an empty
-            traversable MUST be returned instead.
-
-        """
-        items = []
-        for key in keys:
-            items.append(self.get_item(key))
-        return items
-
-
-    def has_item(self, key):
+    def __contains__(self, key):
         """Confirms if the cache contains specified cache item.
 
         Note:
@@ -96,7 +82,7 @@ class RedisItemPool(CacheItemPoolInterface):
         return self.client.flushall()
 
 
-    def delete_item(self, key):
+    def __delete__(self, key):
         """Removes the item from the pool.
 
         :param key: The key for which to delete
@@ -109,7 +95,7 @@ class RedisItemPool(CacheItemPoolInterface):
         return self.client.delete(self.normalize_key(key))
 
 
-    def save(self, item):
+    def __setitem__(self, key, item):
         """Persists a cache item immediately.
 
         :param item: The cache item to save.
