@@ -13,7 +13,7 @@ def readme():
 setup(
     name='python-cache',
     packages = find_packages(exclude=["tests.*", "tests"]),
-    version='0.0.8',
+    version='0.0.9',
     description='Pythonic way of Caching',
     long_description=readme(),
     author='python-cache',
