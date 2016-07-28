@@ -133,7 +133,6 @@ class MongoItemPool(CacheItemPoolInterface):
         md5_key = hashlib.md5(cPickle_key).hexdigest()
         if item.expire_at != datetime.max:
             if item.expire_at > datetime.utcnow():
-                print "here expire"
                 return self.collection.update(
                     {"md5": md5_key, "key": cPickle_key},
                     {

@@ -8,7 +8,10 @@ import cPickle
 
 from pycache.cacheItem import CacheItem
 
-def cached(CacheItemPool='memory', enable=True):
+def cached(CacheItemPool='memory',
+           enable=True,
+           expire_after=None,
+           expire_at=None):
     """
       Caches the result of the computation
       based on the function parameters
@@ -31,6 +34,10 @@ def cached(CacheItemPool='memory', enable=True):
                 val = func(*args, **kwargs)
                 item = CacheItem()
                 item.set(key, val)
+                if expire_after != None:
+                    item.expire_after(expire_after)
+                if expire_at != None:
+                    item.expire_at(expire_at)
                 CacheItemPool.save(item)
             return val
         return inner
