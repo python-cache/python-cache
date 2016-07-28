@@ -98,7 +98,7 @@ class CacheItem(CacheItemInterface):
         self._setHit()
         return timestamp
 
-    def expires_after(self, seconds):
+    def expire_after(self, seconds):
         """Sets the expiration time for this cache item.
 
         Note:
@@ -108,14 +108,14 @@ class CacheItem(CacheItemInterface):
             If none is set, the value should be stored permanently or for as long as the
             implementation allows.
 
-        :param time: expiration time in timedelta
+        :param time: expiration time in seconds
 
         :return The called object.
 
         """
-        self.expire_at = datetime.utcnow()+timedelta(seconds=seconds)
+        self.expire_at = datetime.utcnow()+timedelta(milliseconds=seconds*1000)
         self._setHit()
-        return timedelta
+        return seconds
 
     def _setHit(self):
         if datetime.utcnow() > self.expire_at:

@@ -1,5 +1,6 @@
 import cPickle
 import pymongo
+import hashlib
 from datetime import datetime
 
 from pycache.Adapter.CacheItemPoolInterface import CacheItemPoolInterface
@@ -11,6 +12,8 @@ from pycache.settings import PREFIX
 MongoItemPool.
 
 This module generates CacheItemInterface objects.
+
+Use MD5 as key index to speed up database query
 
 """
 
@@ -36,13 +39,14 @@ class MongoItemPool(CacheItemPoolInterface):
         :return The corresponding Cache Item.
 
         """
-        key = self.normalize_key(key)
-        document = self.collection.find_one({"key": key})
+        cPickle_key = self.normalize_key(key)
+        md5_key = hashlib.md5(cPickle_key).hexdigest()
+        document = self.collection.find_one({"md5":md5_key, "key": cPickle_key})
         if document != None:
-
             item = cPickle.loads(str(document['item']))
             item.isHit = True
             return item
+
         else:
             item = CacheItem()
             item.key = key
@@ -84,8 +88,9 @@ class MongoItemPool(CacheItemPoolInterface):
         :return True if item exists in the cache, false otherwise.
 
         """
-        key = self.normalize_key(key)
-        document = self.collection.find_one({"key": key})
+        cPickle_key = self.normalize_key(key)
+        md5_key = hashlib.md5(cPickle_key).hexdigest()
+        document = self.collection.find_one({"md5":md5_key,"key": cPickle_key})
         if document != None:
             return True
         else:
@@ -111,7 +116,9 @@ class MongoItemPool(CacheItemPoolInterface):
         :return True if the item was successfully removed. False if there was an error.
 
         """
-        return self.collection.remove({"key":self.normalize_key(key)})
+        cPickle_key = self.normalize_key(key)
+        md5_key = hashlib.md5(cPickle_key).hexdigest()
+        return self.collection.remove({"md5":md5_key, "key":cPickle_key})
 
 
     def save(self, item):
@@ -122,21 +129,25 @@ class MongoItemPool(CacheItemPoolInterface):
         :return True if the item was successfully persisted. False if there was an error.
 
         """
-
+        cPickle_key = self.normalize_key(item.key)
+        md5_key = hashlib.md5(cPickle_key).hexdigest()
         if item.expire_at != datetime.max:
             if item.expire_at > datetime.utcnow():
                 return self.collection.update(
-                    {"key": self.normalize_key(item.key)},
-                    {"key": self.normalize_key(item.key),
+                    {"md5": md5_key, "key": cPickle_key},
+                    {
+                    "md5": md5_key,
+                    "key": cPickle_key,
                     "item": cPickle.dumps(item),
-                    "expireAt": item.expire_at },
+                    "expireAt": item.expire_at},
                     upsert=True)
             else:
+                self.delete_item(item.key)
                 return False
         else:
             return self.collection.update(
-                {"key": self.normalize_key(item.key)},
-                {"key": self.normalize_key(item.key),
+                {"md5": md5_key, "key": cPickle_key},
+                {"md5": md5_key, "key": cPickle_key,
                 "item": cPickle.dumps(item)},
                 upsert=True)
 
