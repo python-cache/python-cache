@@ -26,7 +26,7 @@ print(ret_item.get(), ret_item.get_key())
 # ---expire before save---
 print("---expire before save---")
 item.set("mykey","myval")
-item.expires_after(1)
+item.expire_after(1)
 print("sleep 2 seconds")
 time.sleep(2)
 print("isHit:",item.is_hit()) # "False"
@@ -40,7 +40,7 @@ print(ret_item.is_hit(), ret_item.get(), ret_item.get_key())
 # ---save then expire---
 print("---save then expire---")
 item.set("mykey","myval")
-item.expires_after(1)
+item.expire_after(1)
 pool.save(item)
 print("sleep 2 seconds")
 time.sleep(2)

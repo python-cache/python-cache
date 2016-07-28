@@ -7,7 +7,7 @@ from pycache.Adapter import RedisItemPool
 from pycache import CacheItem
 
 # create redis client
-client = redis.Redis(host='192.168.99.100', port=32771)
+client = redis.Redis(host='192.168.99.100', port=6379)
 
 # init RedisItemPool with redis client
 pool = RedisItemPool(client)
@@ -25,7 +25,7 @@ print("--")
 
 # set expire
 item.set("mykey","myval")
-item.expires_after(1)
+item.expire_after(1)
 print("sleep 2 seconds")
 time.sleep(2)
 print("isHit:",item.is_hit()) # "False"

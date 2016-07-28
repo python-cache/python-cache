@@ -24,7 +24,7 @@ class TestCacheItem():
         assert ret_item.get_key() == "mykey"
         assert ret_item.is_hit() == True
 
-    def test_expire_atfter(self):
+    def test_expire_after(self):
         # create mongo client
         client = pymongo.MongoClient(host=settings.MONGO_HOST, port=settings.MONGO_PORT)
 
@@ -34,7 +34,7 @@ class TestCacheItem():
 
         # set expire
         item.set("mykey", "myval")
-        item.expires_after(1)
+        item.expire_after(1)
         pool.save(item)
         ret_item = pool.get_item("mykey")
         assert ret_item.is_hit() == True
@@ -57,3 +57,21 @@ class TestCacheItem():
 
         assert myAdder(5, 6) == 11  # wait for 3 seconds
         assert myAdder(5, 6) == 11  # no need wait
+
+    def test_Decorator_expire(self):
+        client = pymongo.MongoClient(host=settings.MONGO_HOST, port=settings.MONGO_PORT)
+        pool = MongoItemPool(client, DB="pycache", COLLECTION="pytest")
+
+        # decorate myAdder function in common way
+        @cached(CacheItemPool=pool, expire_after=0.5)
+        def myAdder_expire(a, b):
+            import time
+            print 'Add %d + %d need 3 seconds!' % (a, b)
+            time.sleep(3)
+            return a + b
+
+        assert myAdder_expire(5, 6) == 11  # wait for 3 seconds
+        time.sleep(1)
+        cur = time.time()
+        assert myAdder_expire(5, 6) == 11  # need wait another 3 seconds
+        assert time.time()-cur > 1
